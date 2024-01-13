@@ -1,0 +1,74 @@
+version: "3.8"
+services:
+    # image project
+    Fone_tech_gestao:
+        build: 
+            args: 
+                user: breno
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: breno-felip3/fone_tech_gestao
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        depends_on: 
+            - redis
+            - queue
+        networks: 
+            - laravel-eti
+    
+    # nginx
+    nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        ports: 
+            - 80:80
+        volumes: 
+            - ./:/var/www
+            - ./docker/nginx/:/etc/nginx/conf.d/
+        networks: 
+            - laravel-eti
+
+    # db mysql
+    mysql:
+        image: mysql:latest
+        restart: unless-stopped
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./.docker/mysql:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        networks: 
+            - laravel-eti
+
+    # queue
+    queue:
+        build: 
+            args: 
+                user: breno
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        command: "php artisan queue:work"
+        volumes: 
+            - ./:/var/www
+        depends_on: 
+            - redis
+        networks: 
+            - laravel-eti
+
+    # redis
+    redis:
+        image: redis:latest
+        networks: 
+            - laravel-eti
+
+networks: 
+    laravel-eti:
+        driver: bridge
