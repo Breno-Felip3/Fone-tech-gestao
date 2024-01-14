@@ -64,7 +64,7 @@ return [
     */
 
     'logo' => '<b>Fone Tech Gestão</b>',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo_img' => 'vendor/adminlte/dist/img/logoFoneTech.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -86,7 +86,7 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'vendor/adminlte/dist/img/logoFoneTech.png',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
@@ -109,7 +109,7 @@ return [
     'preloader' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'vendor/adminlte/dist/img/logoFoneTech.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
             'width' => 60,
@@ -167,11 +167,11 @@ return [
     |
     */
 
-    'classes_auth_card' => 'card-outline card-primary',
-    'classes_auth_header' => '',
+    'classes_auth_card' => '',
+    'classes_auth_header' => 'bg-gradient-info',
     'classes_auth_body' => '',
-    'classes_auth_footer' => '',
-    'classes_auth_icon' => '',
+    'classes_auth_footer' => 'text-center',
+    'classes_auth_icon' => 'fa-lg text-info',
     'classes_auth_btn' => 'btn-flat btn-primary',
 
     /*
@@ -290,84 +290,46 @@ return [
     */
 
     'menu' => [    
-    
+        [   
+            'header' => 'Cadastros',
+        ],
+
         [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
+            'text' => 'Produto',
+            'url'  => '/produtos/index',
+            'icon' => 'fa fa-table',
         ],
         [
-            'text'        => 'pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
+            'text' => 'Estoque',
+            'url'  => '#',
+            'icon' => 'fa fa-dolly',
         ],
         [
-            'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
+            'text' => 'Forma de Pagamento',
+            'url'  => '#',
+            'icon' => 'fas fa-dollar-sign',
         ],
         [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
+            'text' => 'Cliente',
+            'url'  => '#',
+            'icon' => 'fas fa-user-plus',
         ],
         [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
+            'text' => 'Venda',
+            'url'  => '#',
+            'icon' => 'fa fa-store',
         ],
         [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
+            'text' => 'Tipo de Serviço',
+            'url'  => '#',
+            'icon' => 'fa fa-screwdriver',
         ],
+        [
+            'text' => 'Serviço Realizado',
+            'url'  => '#',
+            'icon' => 'fa fa-handshake',
+        ],
+ 
     ],
 
     /*
