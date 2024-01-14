@@ -26,4 +26,14 @@ class ProdutoService
     {
         return $this->repositorio->show($id);
     }
+
+    public function updateProduto($dados, $id)
+    {
+        return $this->repositorio->update($dados, $id);
+    }
+
+    public function destroyProduto($id)
+    {
+        return $this->repositorio->destroy($id);
+    }
 }

@@ -11,8 +11,8 @@ class Produto extends Model
 
     protected $fillable = [
         'nome',
-        'preco_compra',
         'preco_venda',
-        'tempo_garantia'
+        'tempo_garantia',
+        'descricao'
     ];
 }

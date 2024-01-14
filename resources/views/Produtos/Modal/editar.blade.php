@@ -7,11 +7,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('produtos.store')}}" method="POST">
+            <form id="FormEditar" action="" method="POST">
+                @method('PUT')
                 @csrf
-                <div class="modal-body">
-                    <input type="hidden" id="produto_id" name="produto_id">
-                    
+                <div class="modal-body">                    
                     @include('Produtos/Modal/form')
                 </div>
 

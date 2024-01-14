@@ -22,37 +22,32 @@ class ProdutoController extends Controller
         return view('Produtos/index', compact('produtos'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreUpdateProduto $request)
     {
         $this->ProdutoService->createNewProduto($request->validated());
       
-        return redirect()->route('produtos.index');
+        return redirect()->route('produtos.index')->with('success', 'Produto cadastrado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
-        $this->ProdutoService->showProduto($id);
+        $produto = $this->ProdutoService->showProduto($id);
+
+        return response()->json($produto);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+
+    public function update(StoreUpdateProduto $request, $id)
     {
-        //
+        $this->ProdutoService->updateProduto($request->validated(), $id);
+
+        return redirect()->route('produtos.index')->with('success', 'Produto atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
-        //
+        $this->ProdutoService->destroyProduto($id);
+
     }
 }

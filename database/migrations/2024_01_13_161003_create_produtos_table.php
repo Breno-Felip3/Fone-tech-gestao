@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nome', 100);
             $table->double('preco_venda');
-            $table->integer('tempo_garantia')->nullable(false);
-            $table->text('descricao');
+            $table->integer('tempo_garantia')->nullable();
+            $table->text('descricao')->nullable();
             $table->timestamps();
         });
     }

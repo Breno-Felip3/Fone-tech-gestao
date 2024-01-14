@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nome', 50);
             $table->enum('tipo', ['a_vista', 'a_prazo']);
-            $table->double('custo_adicional')->nullable(false);
+            $table->double('custo_adicional')->nullable();
             $table->timestamps();
         });
     }

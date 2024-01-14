@@ -23,9 +23,9 @@ class StoreUpdateProduto extends FormRequest
     {
         return [
             'nome' => 'required',
-            'preco_compra' => 'required',
             'preco_venda' => 'required',
-            'tempo_garantia' => 'required'
+            'tempo_garantia' => 'required',
+            'descricao' => 'nullable',
         ];
     }
 }

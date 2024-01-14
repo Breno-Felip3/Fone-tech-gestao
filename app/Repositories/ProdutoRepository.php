@@ -24,8 +24,20 @@ class ProdutoRepository
 
     public function show($id)
     {
-        $produto = $this->entidade->find($id);
-        dd($produto);
-        return response()->json($produto);
+        return $this->entidade->find($id);
+    }
+
+    public function update($dados, $id)
+    {
+        $produto = $this->show($id);
+        
+        return $produto->update($dados);
+    }
+
+    public function destroy($id)
+    {
+        $produto = $this->show($id);
+
+        return $produto->delete();
     }
 }
