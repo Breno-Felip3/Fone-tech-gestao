@@ -301,7 +301,7 @@ return [
         ],
         [
             'text' => 'Estoque',
-            'url'  => '#',
+            'url'  => '/estoques/index',
             'icon' => 'fa fa-dolly',
         ],
         [

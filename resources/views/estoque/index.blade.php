@@ -3,7 +3,7 @@
 @section('title', 'Produtos')
 
 @section('content_header')
-    <h1>Produtos</h1>
+    <h1>Estoque de Produtos</h1>
 @stop
 
 @section('content')
@@ -32,12 +32,11 @@
 @php
 
 $heads = [
-    'Número Produto',
-    'Nome',
-    'Preço Venda',
-    'Tempo Garantia (Dias)',
+    'Produto',
+    'Qtde Adicionada',
+    'Preço Custo Unitario',
     'Quantidade Estoque',
-    'Descrição',
+    'Data Cadastro',
     'Ações'
 ];
 
@@ -45,33 +44,32 @@ $heads = [
 
 <x-adminlte-datatable id="table5" :heads="$heads" theme="light" striped hoverable>
     {{-- Geração dinâmica de linhas --}}
-    @foreach($produtos as $produto)
+     @foreach($estoques as $estoque)
         <tr>
-           <th>{{$produto->id}}</th>
-           <th>{{$produto->nome}}</th>
-           <th>{{ 'R$ ' . number_format($produto->preco_venda, 2, ',', '.') }}</th>
-           <th>{{$produto->tempo_garantia}}</th>
-           <th>1</th>
-           <th>{{$produto->descricao}}</th>
+            <th>{{$estoque->produto->nome}}</th>
+            <th>{{$estoque->quantidade_inicial}}</th>
+            <th>{{ 'R$ ' . number_format($estoque->preco_custo, 2, ',', '.') }}</th>
+            <th>{{$estoque->quantidade_disponivel}}</th>
+            <th>{{$estoque->created_at}}</th>
            <th>
             
-            <button class="btn btn-xs btn-default text-primary mx-1 shadow editar"  data-id="{{ $produto->id }}" title="Editar">
+            <button class="btn btn-xs btn-default text-primary mx-1 shadow editar"  title="Editar">
                 <i class="fa fa-lg fa-fw fa-pen"></i>
             </button>
 
-            <button class="btn btn-xs btn-default text-danger mx-1 shadow deletar"  data-id="{{ $produto->id }}" title="Apagar">
+            <button class="btn btn-xs btn-default text-danger mx-1 shadow deletar"  title="Apagar">
                 <i class="fa fa-lg fa-fw fa-trash"></i>
             </button>
            </th>
         </tr>
-    @endforeach
+    @endforeach 
 
 </x-adminlte-datatable>
 
 <!-- Modal de Cadastro -->
-@include('Produtos/Modal/confirmacaoExclusao')
-@include('Produtos/Modal/cadastrar')
-@include('Produtos/Modal/editar')
+{{-- @include('estoque/modal/confirmacaoExclusao') --}}
+@include('estoque/modal/cadastrar')
+@include('estoque/modal/editar')
 
 @stop
 
@@ -80,9 +78,9 @@ $heads = [
 @stop
 
 @section('js')
-    <script>
+    {{-- <script>
 
-        $(document).ready(function () {
+         $(document).ready(function () {
 
             // Limpar campos ao clicar no botão Cadastrar
             $('#btnCadastrar').click(function() {
@@ -149,4 +147,4 @@ $heads = [
             });
         });
     </script>
-@stop
+@stop 

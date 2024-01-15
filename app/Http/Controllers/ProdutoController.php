@@ -9,29 +9,29 @@ use Illuminate\Http\Request;
 class ProdutoController extends Controller
 {
    
-    protected $ProdutoService;
+    protected $produtoService;
     public function __construct(ProdutoService $produtoService)
     {   
-        $this->ProdutoService = $produtoService;
+        $this->produtoService = $produtoService;
     }
 
     public function index()
     {
-        $produtos = $this->ProdutoService->getProdutos();
+        $produtos = $this->produtoService->getProdutos();
 
-        return view('Produtos/index', compact('produtos'));
+        return view('produto/index', compact('produtos'));
     }
 
     public function store(StoreUpdateProduto $request)
     {
-        $this->ProdutoService->createNewProduto($request->validated());
+        $this->produtoService->createNewProduto($request->validated());
       
-        return redirect()->route('produtos.index')->with('success', 'Produto cadastrado com sucesso!');
+        return redirect()->route('produto.index')->with('success', 'Produto cadastrado com sucesso!');
     }
 
     public function show($id)
     {
-        $produto = $this->ProdutoService->showProduto($id);
+        $produto = $this->produtoService->showProduto($id);
 
         return response()->json($produto);
     }
@@ -39,15 +39,15 @@ class ProdutoController extends Controller
 
     public function update(StoreUpdateProduto $request, $id)
     {
-        $this->ProdutoService->updateProduto($request->validated(), $id);
+        $this->produtoService->updateProduto($request->validated(), $id);
 
-        return redirect()->route('produtos.index')->with('success', 'Produto atualizado com sucesso!');
+        return redirect()->route('produto.index')->with('success', 'Produto atualizado com sucesso!');
     }
 
 
     public function destroy(string $id)
     {
-        $this->ProdutoService->destroyProduto($id);
+        $this->produtoService->destroyProduto($id);
 
     }
 }

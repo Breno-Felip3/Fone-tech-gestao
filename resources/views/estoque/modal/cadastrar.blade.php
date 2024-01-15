@@ -2,16 +2,16 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Cadastrar novo Produto</h5>
+                <h5 class="modal-title" id="myModalLabel">Adicionar item ao estoque</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('produtos.store')}}" method="POST">
+            <form action="{{route('produto.store')}}" method="POST">
                 @csrf
                 <div class="modal-body">
 
-                    @include('Produtos/Modal/form')
+                    @include('estoque/modal/form')
                 </div>
 
                 <div class="modal-footer">

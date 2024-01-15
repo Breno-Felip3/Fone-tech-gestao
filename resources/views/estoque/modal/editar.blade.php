@@ -11,7 +11,7 @@
                 @method('PUT')
                 @csrf
                 <div class="modal-body">                    
-                    @include('Produtos/Modal/form')
+                    @include('estoque/modal/form')
                 </div>
 
                 <div class="modal-footer">

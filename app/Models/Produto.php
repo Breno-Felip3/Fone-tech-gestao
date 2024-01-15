@@ -15,4 +15,9 @@ class Produto extends Model
         'tempo_garantia',
         'descricao'
     ];
+
+    public function estoques()
+    {
+        return $this->hasMany(Estoque::class);
+    }
 }
