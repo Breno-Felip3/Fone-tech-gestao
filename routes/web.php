@@ -27,7 +27,8 @@ Route::prefix('/produtos')->group(function(){
 
 Route::prefix('/estoques')->group(function(){
     Route::get('/index', [EstoqueController::class, 'index'])->name('estoque.index');
-    Route::post('/salvar', [EstoqueController::class, 'store'])->name('produto.store');
+    Route::any('/cadastro', [EstoqueController::class, 'create'])->name('estoque.create');
+    Route::post('/salvar', [EstoqueController::class, 'store'])->name('estoque.store');
     // Route::get('/show/{id}', [EstoqueController::class, 'show']);
     // Route::put('/atualizar/{id}', [EstoqueController::class, 'update'])->name('produtos.update');
     // Route::delete('/deletar/{id}', [EstoqueController::class, 'destroy'])->name('produtos.delete');

@@ -14,11 +14,15 @@ class ProdutoRepository
 
     public function getAllProdutos()
     {
-        return $this->entidade->get();
+        return $this->entidade->with('estoque')->paginate(8);
     }
 
     public function create(array $dados)
     {
+        // Formatar o valor substituindo vírgulas por pontos
+        $dados['preco_custo'] = str_replace(',', '.', $dados['preco_custo']);
+        $dados['preco_venda'] = str_replace(',', '.', $dados['preco_venda']);
+        
         return $this->entidade->create($dados);
     }
 

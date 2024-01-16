@@ -22,9 +22,8 @@ class StoreUpdateEstoque extends FormRequest
     public function rules(): array
     {
         return [
-            'produto_id' => 'required',
-            'quantidade_inicial' => 'required',
-            'preco_custo' => 'required'
+            'quantidade' => 'required',
+            'observacao' => 'nullable'
         ];
     }
 }

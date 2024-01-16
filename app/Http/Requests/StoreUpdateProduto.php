@@ -23,6 +23,7 @@ class StoreUpdateProduto extends FormRequest
     {
         return [
             'nome' => 'required',
+            'preco_custo' => 'required',
             'preco_venda' => 'required',
             'tempo_garantia' => 'required',
             'descricao' => 'nullable',

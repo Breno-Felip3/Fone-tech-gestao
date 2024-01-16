@@ -11,13 +11,21 @@ class Produto extends Model
 
     protected $fillable = [
         'nome',
+        'preco_custo',
         'preco_venda',
         'tempo_garantia',
         'descricao'
     ];
 
-    public function estoques()
+    public function estoque()
     {
-        return $this->hasMany(Estoque::class);
+        return $this->hasOne(EstoqueSaldo::class);
     }
+
+    //Retorna as entradas do produto
+    public function entradas()
+    {
+        return $this->hasMany(EstoqueEntrada::class);
+    }
+    
 }

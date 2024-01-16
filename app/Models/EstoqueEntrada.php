@@ -6,23 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
-class Estoque extends Model
+class EstoqueEntrada extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'produto_id',
-        'quantidade_inicial',
-        'quantidade_disponivel',
-        'preco_custo',
+        'observacao',
+        'total_entrada',
         'creat_at'
     ];
 
-    public function produto()
+    //retorna os itens da entrada
+    public function itens()
     {
-        return $this->belongsTo(Produto::class);
+        return $this->hasMany(EstoqueEntradaItem::class);
     }
-
+    
     public function getCreatedAtAttribute($creatAt)
     {
         return $creatAt ? Carbon::make($creatAt)->format('d/m/Y') : null;

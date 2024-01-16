@@ -34,8 +34,9 @@
 $heads = [
     'Número Produto',
     'Nome',
+    'Preço Custo',
     'Preço Venda',
-    'Tempo Garantia (Dias)',
+    'Tempo Garantia (Meses)',
     'Quantidade Estoque',
     'Descrição',
     'Ações'
@@ -43,15 +44,24 @@ $heads = [
 
 @endphp
 
-<x-adminlte-datatable id="table5" :heads="$heads" theme="light" striped hoverable>
+<x-adminlte-datatable id="table3" :heads="$heads" head-theme="dark" theme="light" striped hoverable>
     {{-- Geração dinâmica de linhas --}}
     @foreach($produtos as $produto)
         <tr>
            <th>{{$produto->id}}</th>
            <th>{{$produto->nome}}</th>
+           <th>{{ 'R$ ' . number_format($produto->preco_custo, 2, ',', '.') }}</th>
            <th>{{ 'R$ ' . number_format($produto->preco_venda, 2, ',', '.') }}</th>
            <th>{{$produto->tempo_garantia}}</th>
-           <th>1</th>
+           <th>
+                @if ($produto->estoque && $produto->estoque->quantidade)
+                    {{ $produto->estoque->quantidade }}
+                @else
+                    0
+                @endif
+            </th>
+        
+            </th>
            <th>{{$produto->descricao}}</th>
            <th>
             
@@ -67,6 +77,12 @@ $heads = [
     @endforeach
 
 </x-adminlte-datatable>
+
+@if(isset($search))
+    {{ $produtos->appends(['search' => $search])->links('pagination::bootstrap-5') }}
+@else
+    {{ $produtos->links('pagination::bootstrap-5') }}
+@endif
 
 <!-- Modal de Cadastro -->
 @include('produto/Modal/confirmacaoExclusao')
@@ -89,6 +105,9 @@ $heads = [
                 // Limpar os campos
                 $('#nome').val('');
                 $('#preco_venda').val('');
+                $('#preco_custo').val('');
+                $('#preco_custo').removeAttr('readonly');
+                $('#preco_venda').removeAttr('readonly');
                 $('#tempo_garantia').val('');
                 $('#descricao').val('');
             });
@@ -133,9 +152,12 @@ $heads = [
                     success: function (data) {
                         $(' #nome').val(data.nome);
                         $(' #preco_venda').val(data.preco_venda);
+                        $(' #preco_custo').val(data.preco_custo);
+                        $(' #preco_custo').val(data.preco_custo).attr('readonly', true);
+                        $(' #preco_venda').val(data.preco_venda).attr('readonly', true);
                         $(' #tempo_garantia').val(data.tempo_garantia);
                         $(' #descricao').val(data.descricao);
-
+                    
                         // Defina a ação do formulário dinamicamente
                         $('#FormEditar').attr('action', '/produtos/atualizar/' + produto_id);
 

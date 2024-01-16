@@ -1,15 +1,20 @@
 @extends('adminlte::page')
 
-@section('title', 'Produtos')
+@section('title', 'Estoques')
 
 @section('content_header')
-    <h1>Estoque de Produtos</h1>
+    <h1>Entrada de Estoque</h1>
 @stop
 
 @section('content')
 
 <div class="mb-3">
-    <button class="btn btn-success" data-toggle="modal" id="btnCadastrar" data-target="#cadastrar">Cadastrar</button>
+
+    <form action="{{route('estoque.create')}}" method="post">
+        @csrf
+        <button class="btn btn-success" data-toggle="modal" id="btnCadastrar" data-target="#cadastrar">Cadastrar</button>
+    </form>
+    
 
     <div id="mensagemConfirmaExclusao" class="alert alert-success" style="margin-top: 10px; display: none;"> Produto excluído com sucesso! </div>
 
@@ -32,25 +37,25 @@
 @php
 
 $heads = [
-    'Produto',
-    'Qtde Adicionada',
-    'Preço Custo Unitario',
-    'Quantidade Estoque',
+    'Numero',
+    'Quantidade de Produtos',
+    'Total Entrada',
     'Data Cadastro',
+    'Observação',
     'Ações'
 ];
 
 @endphp
 
-<x-adminlte-datatable id="table5" :heads="$heads" theme="light" striped hoverable>
+<x-adminlte-datatable id="table3" :heads="$heads" head-theme="dark" theme="light" striped hoverable>
     {{-- Geração dinâmica de linhas --}}
-     @foreach($estoques as $estoque)
+     @foreach($entradas as $entrada)
         <tr>
-            <th>{{$estoque->produto->nome}}</th>
-            <th>{{$estoque->quantidade_inicial}}</th>
-            <th>{{ 'R$ ' . number_format($estoque->preco_custo, 2, ',', '.') }}</th>
-            <th>{{$estoque->quantidade_disponivel}}</th>
-            <th>{{$estoque->created_at}}</th>
+            <th>{{$entrada->id}}</th>
+            <th>{{$entrada->itens_count}}</th>
+            <th>{{ 'R$ ' . number_format($entrada->total_entrada, 2, ',', '.') }}</th>
+            <th>{{$entrada->created_at}}</th>
+            <th>{{$entrada->observacao}}</th>
            <th>
             
             <button class="btn btn-xs btn-default text-primary mx-1 shadow editar"  title="Editar">
@@ -68,8 +73,8 @@ $heads = [
 
 <!-- Modal de Cadastro -->
 {{-- @include('estoque/modal/confirmacaoExclusao') --}}
-@include('estoque/modal/cadastrar')
-@include('estoque/modal/editar')
+
+
 
 @stop
 
