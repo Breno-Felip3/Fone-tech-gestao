@@ -12,9 +12,10 @@ class EstoqueService
         $this->repositorio = $estoqueRepository;
     }
 
-    public function getEstoques()
+    public function getEstoques($dadosRequisicao)
     {
-        return $this->repositorio->getAllEstoques();
+        $dadosRequisicao = $dadosRequisicao;
+        return $this->repositorio->getAllEstoques($dadosRequisicao);
     }
 
     public function createNewEstoque($dados)

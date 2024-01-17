@@ -36,44 +36,49 @@
 
 @php
 
-$heads = [
-    'Numero',
-    'Quantidade de Produtos',
-    'Total Entrada',
-    'Data Cadastro',
-    'Observação',
-    'Ações'
-];
+    $heads = [
+        'Numero',
+        'Quantidade de Produtos',
+        'Total Entrada (R$)',
+        'Data Cadastro',
+        'Observação',
+        'Ações'
+    ];
+
+    
+    $config = [
+        'processing' => true,
+        'serverSide' => true,
+        'order' => [0, 'asc'],
+        'columns' => [
+            ['data' => 'id'],
+            ['data' => 'quantidade_produtos'],
+            ['data' => 'total_entrada'],
+            ['data' => 'created_at'],
+            ['data' => 'observacao', 'orderable' => false],
+            [ 'data' => null, 'orderable' => false],
+                        
+        ],
+        'ajax' => [
+            'url' => '/estoques/show',
+            'method' => 'GET',
+        ],
+        'language' => [
+            'url' => asset('json/traducao_datatables.json'),
+        ],
+        
+    ];
 
 @endphp
 
-<x-adminlte-datatable id="table3" :heads="$heads" head-theme="dark" theme="light" striped hoverable>
-    {{-- Geração dinâmica de linhas --}}
-     @foreach($entradas as $entrada)
-        <tr>
-            <th>{{$entrada->id}}</th>
-            <th>{{$entrada->itens_count}}</th>
-            <th>{{ 'R$ ' . number_format($entrada->total_entrada, 2, ',', '.') }}</th>
-            <th>{{$entrada->created_at}}</th>
-            <th>{{$entrada->observacao}}</th>
-           <th>
-            
-            <button class="btn btn-xs btn-default text-primary mx-1 shadow editar"  title="Editar">
-                <i class="fa fa-lg fa-fw fa-pen"></i>
-            </button>
+{{-- Compressed with style options / fill data using the plugin config --}}
+<x-adminlte-datatable id="estoques" :heads="$heads" head-theme="dark" :config="$config"
+    striped hoverable bordered compressed ajax-url="{{ $config['ajax']['url'] }}" ajax-method="{{ $config['ajax']['method'] }}"
+    server-side processing/>
 
-            <button class="btn btn-xs btn-default text-danger mx-1 shadow deletar"  title="Apagar">
-                <i class="fa fa-lg fa-fw fa-trash"></i>
-            </button>
-           </th>
-        </tr>
-    @endforeach 
 
-</x-adminlte-datatable>
-
-<!-- Modal de Cadastro -->
-{{-- @include('estoque/modal/confirmacaoExclusao') --}}
-
+<!-- Modal de detalhes -->
+{{-- @include('estoque/modal/detalhes') --}}
 
 
 @stop

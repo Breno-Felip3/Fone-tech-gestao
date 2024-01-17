@@ -12,9 +12,10 @@ class ProdutoService
         $this->repositorio = $produtoRepository;
     }
 
-    public function getProdutos()
+    public function getProdutos( $dadosRequisicao)
     {
-        return $this->repositorio->getAllProdutos();
+        $dadosRequisicao =  $dadosRequisicao;
+        return $this->repositorio->getAllProdutos( $dadosRequisicao);
     }
 
     public function createNewProduto(array $dados)

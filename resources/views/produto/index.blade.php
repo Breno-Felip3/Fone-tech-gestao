@@ -29,60 +29,51 @@
   
 </div>
 
+ {{-- Setup data for datatables  --}}
 @php
 
-$heads = [
-    'Número Produto',
-    'Nome',
-    'Preço Custo',
-    'Preço Venda',
-    'Tempo Garantia (Meses)',
-    'Quantidade Estoque',
-    'Descrição',
-    'Ações'
-];
+    $heads = [
+        'Número Produto',
+        'Nome Produto',
+        'Preço Custo (R$)',
+        'Preço Venda (R$)',
+        'Tempo Garantia',
+        'Quantidade Estoque',
+        'Ações'
+    ];
+
+    
+    $config = [
+        'processing' => true,
+        'serverSide' => true,
+        'order' => [0, 'asc'],
+        'columns' => [
+            ['data' => 'id'],
+            ['data' => 'nome'],
+            ['data' => 'preco_custo'],
+            ['data' => 'preco_venda'],
+            ['data' => 'tempo_garantia', 'orderable' => false],
+            ['data' => 'estoque.quantidade'],
+            [ 'data' => null, 'orderable' => false],
+                        
+        ],
+        'ajax' => [
+            'url' => '/produtos/show',
+            'method' => 'GET',
+        ],
+        'language' => [
+            'url' => asset('json/traducao_datatables.json'),
+        ],
+        
+    ];
 
 @endphp
 
-<x-adminlte-datatable id="table3" :heads="$heads" head-theme="dark" theme="light" striped hoverable>
-    {{-- Geração dinâmica de linhas --}}
-    @foreach($produtos as $produto)
-        <tr>
-           <th>{{$produto->id}}</th>
-           <th>{{$produto->nome}}</th>
-           <th>{{ 'R$ ' . number_format($produto->preco_custo, 2, ',', '.') }}</th>
-           <th>{{ 'R$ ' . number_format($produto->preco_venda, 2, ',', '.') }}</th>
-           <th>{{$produto->tempo_garantia}}</th>
-           <th>
-                @if ($produto->estoque && $produto->estoque->quantidade)
-                    {{ $produto->estoque->quantidade }}
-                @else
-                    0
-                @endif
-            </th>
-        
-            </th>
-           <th>{{$produto->descricao}}</th>
-           <th>
-            
-            <button class="btn btn-xs btn-default text-primary mx-1 shadow editar"  data-id="{{ $produto->id }}" title="Editar">
-                <i class="fa fa-lg fa-fw fa-pen"></i>
-            </button>
+{{-- Compressed with style options / fill data using the plugin config --}}
+<x-adminlte-datatable id="produtos" :heads="$heads" head-theme="dark" :config="$config"
+    striped hoverable bordered compressed ajax-url="{{ $config['ajax']['url'] }}" ajax-method="{{ $config['ajax']['method'] }}"
+    server-side processing/>
 
-            <button class="btn btn-xs btn-default text-danger mx-1 shadow deletar"  data-id="{{ $produto->id }}" title="Apagar">
-                <i class="fa fa-lg fa-fw fa-trash"></i>
-            </button>
-           </th>
-        </tr>
-    @endforeach
-
-</x-adminlte-datatable>
-
-@if(isset($search))
-    {{ $produtos->appends(['search' => $search])->links('pagination::bootstrap-5') }}
-@else
-    {{ $produtos->links('pagination::bootstrap-5') }}
-@endif
 
 <!-- Modal de Cadastro -->
 @include('produto/Modal/confirmacaoExclusao')
@@ -92,7 +83,7 @@ $heads = [
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
 @stop
 
 @section('js')

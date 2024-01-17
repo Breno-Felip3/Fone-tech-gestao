@@ -21,15 +21,20 @@ class EstoqueController extends Controller
 
     public function index()
     {
-        $produtos = $this->produtoService->getProdutos();
-        $entradas = $this->estoqueServico->getEstoques();
+        return view('estoque/index');
+    }
 
-        return view('estoque/index', compact('produtos', 'entradas'));
+    public function showEstoques(Request $request)
+    {
+        $dadosRequisicao = $request;
+
+        return $this->estoqueServico->getEstoques($dadosRequisicao);
+
     }
 
     public function create()
     {
-        $produtos = $this->produtoService->getProdutos();
+        $produtos = $this->produtoService->getProdutos(null);
         return view('estoque/cadastrar', compact('produtos'));
     }
 

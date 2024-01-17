@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateProduto;
 use App\Services\ProdutoService;
+use Illuminate\Http\Request;
 
 class ProdutoController extends Controller
 {
@@ -16,9 +17,14 @@ class ProdutoController extends Controller
 
     public function index()
     {
-        $produtos = $this->produtoService->getProdutos();
+        return view('produto/index');
+    }
 
-        return view('produto/index', compact('produtos'));
+    public function showAllProdutos(Request $request)
+    {
+        $dadosRequisicao = $request;
+
+        return $this->produtoService->getProdutos( $dadosRequisicao);
     }
 
     public function store(StoreUpdateProduto $request)

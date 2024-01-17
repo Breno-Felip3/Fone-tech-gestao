@@ -19,6 +19,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::prefix('/produtos')->group(function(){
     Route::get('/index', [ProdutoController::class, 'index'])->name('produto.index');
+    Route::get('/show', [ProdutoController::class, 'showAllProdutos']);
     Route::post('/salvar', [ProdutoController::class, 'store'])->name('produto.store');
     Route::get('/show/{id}', [ProdutoController::class, 'show']);
     Route::put('/atualizar/{id}', [ProdutoController::class, 'update'])->name('produto.update');
@@ -27,6 +28,7 @@ Route::prefix('/produtos')->group(function(){
 
 Route::prefix('/estoques')->group(function(){
     Route::get('/index', [EstoqueController::class, 'index'])->name('estoque.index');
+    Route::get('/show', [EstoqueController::class, 'showEstoques'])->name('estoque.show');
     Route::any('/cadastro', [EstoqueController::class, 'create'])->name('estoque.create');
     Route::post('/salvar', [EstoqueController::class, 'store'])->name('estoque.store');
     // Route::get('/show/{id}', [EstoqueController::class, 'show']);

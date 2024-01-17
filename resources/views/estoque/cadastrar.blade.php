@@ -31,37 +31,37 @@
   
 </div>
 
-@php
-
-$heads = [
-    'Número',
-    'Produto',
-    'Quantidade',
-    'Saldo',
-];
-
-@endphp
-<x-adminlte-datatable id="table3" :heads="$heads" head-theme="dark" theme="light" striped hoverable>
-
 <form action="{{route('estoque.store')}}" method="post">
     @csrf
 
-    @foreach ($produtos as $produto)
-        <tr>
-            <td>{{ $produto->id }}</td>
-            <td>{{ $produto->nome }}</td>
-            <td><input style="width: 80px;" type="text" class="form-control" name="quantidade[{{$produto->id}}]"></td>
-            <td> 
-                @if ($produto->estoque && $produto->estoque->quantidade)
-                    {{ $produto->estoque->quantidade }}
-                @else
-                0
-                @endif
-            </td>
-        </tr>
-    @endforeach
-  
-    </x-adminlte-datatable>
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Número</th>
+            <th scope="col">Produto</th>
+            <th scope="col">Quantidade</th>
+            <th scope="col">Saldo</th>
+          </tr>
+        </thead>
+        <tbody>
+
+            @foreach ($produtos as $produto)
+                <tr>
+                    <td>{{ $produto->id }}</td>
+                    <td>{{ $produto->nome }}</td>
+                    <td><input style="width: 80px;" type="text" class="form-control" name="quantidade[{{$produto->id}}]"></td>
+                    <td> 
+                        @if ($produto->estoque && $produto->estoque->quantidade)
+                            {{ $produto->estoque->quantidade }}
+                        @else
+                        0
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+          
+        </tbody>
+      </table>
 
     <div class="mb-3">
         <label for="exampleTextarea">Observação</label>
@@ -75,16 +75,18 @@ $heads = [
     {{ $produtos->links('pagination::bootstrap-5') }}
     @endif
 
-
-
-    <button class="btn btn-primary" data-toggle="modal" id="btnCadastrar" data-target="#cadastrar">Cadastrar</button>
+    <button class="btn btn-primary margem" data-toggle="modal" id="btnCadastrar" data-target="#cadastrar">Cadastrar</button>
 </form>
 
 
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    <style>
+        .margem{
+            margin-bottom: 15px;
+        }
+    </style>
 @stop
 
 @section('js')

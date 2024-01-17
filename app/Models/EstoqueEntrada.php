@@ -26,4 +26,9 @@ class EstoqueEntrada extends Model
     {
         return $creatAt ? Carbon::make($creatAt)->format('d/m/Y') : null;
     }
+
+    public function getTotalEntradaAttribute($valor)
+    {
+        return $this->attributes['total_entrada'] = number_format($valor, 2, ',', '.');
+    }
 }

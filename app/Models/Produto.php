@@ -26,6 +26,6 @@ class Produto extends Model
     public function entradas()
     {
         return $this->hasMany(EstoqueEntrada::class);
-    }
+    }    
     
 }
