@@ -51,11 +51,11 @@
                     <td>{{ $produto->nome }}</td>
                     <td><input style="width: 80px;" type="text" class="form-control" name="quantidade[{{$produto->id}}]"></td>
                     <td> 
-                        @if ($produto->estoque && $produto->estoque->quantidade)
-                            {{ $produto->estoque->quantidade }}
+                        @if ($produto->estoque && $produto->estoque->quantidade) 
+                        {{ $produto->estoque->quantidade }}
                         @else
                         0
-                        @endif
+                        @endif 
                     </td>
                 </tr>
             @endforeach

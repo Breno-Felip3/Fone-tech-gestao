@@ -61,7 +61,7 @@ class EstoqueRepository
 
         return response()->json([
             'data' => $estoques->getCollection(),
-            'recordsTotal' => $this->entidadeEntrada->count(),
+            'recordsTotal' => count($estoques),
             'recordsFiltered' => $estoques->total(),
         ]);
 

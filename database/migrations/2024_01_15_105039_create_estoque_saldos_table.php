@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('estoque_saldos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('produto_id')->constrained('produtos');
-            $table->integer('quantidade');
+            $table->integer('quantidade')->default(0);
             $table->timestamps();
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Produto;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class ProdutoRepository
 {
@@ -49,11 +50,10 @@ class ProdutoRepository
             $produtos = $produtos->orderBy($colunaOrdenar, $direcaoOrdenar)->paginate($dadosRequisicao['length'], ['*'], 'page', $paginacao);
         }
 
-            //Formata o retorno dos valores para BR
-            $produtos->getCollection()->map(function ($produto) {
+        //Formata o retorno dos valores para BR
+        $produtos->getCollection()->map(function ($produto) {
             $produto->preco_custo = number_format($produto->preco_custo, 2, ',', '.');
             $produto->preco_venda = number_format($produto->preco_venda, 2, ',', '.');
-            return $produto;
         });
         
       

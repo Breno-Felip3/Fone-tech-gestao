@@ -14,7 +14,7 @@
     <div id="mensagemConfirmaExclusao" class="alert alert-success" style="margin-top: 10px; display: none;"> Produto excluído com sucesso! </div>
 
     @if(session('success'))
-        <div style="margin-top: 10px;"> <!-- Adicione a margem superior aqui -->
+        <div style="margin-top: 10px;"> 
             <div class="alert alert-success" id="success-message">
                 {{ session('success') }}
             </div>
@@ -42,7 +42,16 @@
         'Ações'
     ];
 
-    
+    $btnEdit = '<button class="btn btn-xs editar text-primary mx-1 shadow" title="Edit">' .
+                '<i class="fa fa-lg fa-fw fa-pen"></i>' .
+                '</button>';
+    $btnDelete = '<button class="btn btn-xs deletar text-danger mx-1 shadow" title="Delete">
+                    <i class="fa fa-lg fa-fw fa-trash"></i>
+                </button>';
+    // $btnDetails = '<button class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
+    //                 <i class="fa fa-lg fa-fw fa-eye"></i>
+    //             </button>';
+
     $config = [
         'processing' => true,
         'serverSide' => true,
@@ -53,10 +62,17 @@
             ['data' => 'preco_custo'],
             ['data' => 'preco_venda'],
             ['data' => 'tempo_garantia', 'orderable' => false],
-            ['data' => 'estoque.quantidade'],
-            [ 'data' => null, 'orderable' => false],
-                        
+            ['data' => 'estoque.quantidade', 
+
+                'defaultContent' => isset('data'['estoque']['quantidade']) ? 'data'['estoque']['quantidade'] : 0
+            ],
+
+            [
+                'data' => null,
+                'defaultContent' => '<nobr class="btn-column">'.$btnEdit.$btnDelete.'</nobr>',
+            ],            
         ],
+
         'ajax' => [
             'url' => '/produtos/show',
             'method' => 'GET',
@@ -64,7 +80,6 @@
         'language' => [
             'url' => asset('json/traducao_datatables.json'),
         ],
-        
     ];
 
 @endphp
@@ -73,7 +88,6 @@
 <x-adminlte-datatable id="produtos" :heads="$heads" head-theme="dark" :config="$config"
     striped hoverable bordered compressed ajax-url="{{ $config['ajax']['url'] }}" ajax-method="{{ $config['ajax']['method'] }}"
     server-side processing/>
-
 
 <!-- Modal de Cadastro -->
 @include('produto/Modal/confirmacaoExclusao')
@@ -91,6 +105,31 @@
 
         $(document).ready(function () {
 
+            var dataTable = $('#produtos').DataTable();
+            // Captura o clique nos botões dentro da coluna de ações
+
+
+            // Captura o clique nos botões dentro da coluna de ações
+            $('#produtos').on('click', '.btn-column button', function () {
+                // Encontra a linha (row) correspondente ao botão clicado
+                var row = dataTable.row($(this).parents('tr'));
+
+                // Obtém os dados da linha
+                var rowData = row.data();
+
+                // Extrai o ID do objeto de dados
+                var produto_id = rowData.id;
+
+                // Verifica se a classe 'edit' está presente no botão clicado
+                if ($(this).hasClass('editar')) {
+                    // Código para editar
+                    abrirModalEdicao(produto_id);
+                } else if ($(this).hasClass('deletar')){
+                    // Ação desconhecida ou nenhum botão identificado
+                    abrirModalConfirmacao(produto_id);
+                }
+            });
+
             // Limpar campos ao clicar no botão Cadastrar
             $('#btnCadastrar').click(function() {
                 // Limpar os campos
@@ -103,16 +142,11 @@
                 $('#descricao').val('');
             });
 
-            function abrirModalConfirmacao(id)
+            function abrirModalConfirmacao(produto_id)
             {
                 $('#confirmacaoModal').modal('show');
-                $('#confirmarExclusao').data('id', id);
+                $('#confirmarExclusao').data('id', produto_id);
             }
-            
-            $('.deletar').click(function() {
-                var id = $(this).data('id');
-                abrirModalConfirmacao(id);
-            });
 
             $('#confirmarExclusao').click(function() {
                 var id = $(this).data('id');
@@ -133,25 +167,25 @@
                 });
             });
         
-            $('.editar').click(function () {
-                var produto_id = $(this).data('id');
-
+            //Edição do Produto
+            function abrirModalEdicao(produto_id) {
                 $.ajax({
                     url: "/produtos/show/" + produto_id,
                     method: 'GET',
                     dataType: 'json',
                     success: function (data) {
                         $(' #nome').val(data.nome);
-                        $(' #preco_venda').val(data.preco_venda);
-                        $(' #preco_custo').val(data.preco_custo);
-                        $(' #preco_custo').val(data.preco_custo).attr('readonly', true);
-                        $(' #preco_venda').val(data.preco_venda).attr('readonly', true);
+
+                        var preco_venda = data.preco_venda.toFixed(2).replace('.', ',');
+                        var preco_custo = data.preco_custo.toFixed(2).replace('.', ',');
+
+                        $(' #preco_custo').val(preco_venda).attr('readonly', true);
+                        $(' #preco_venda').val(preco_venda).attr('readonly', true);
                         $(' #tempo_garantia').val(data.tempo_garantia);
                         $(' #descricao').val(data.descricao);
                     
                         // Defina a ação do formulário dinamicamente
                         $('#FormEditar').attr('action', '/produtos/atualizar/' + produto_id);
-
                         $('#editar').modal('show');
                     },
                     
@@ -159,7 +193,7 @@
                         console.error("Erro na requisição Ajax:", xhr, status, error);
                     }
                 });
-            });
+            };
         });
     </script>
 @stop
