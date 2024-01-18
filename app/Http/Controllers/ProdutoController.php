@@ -29,9 +29,7 @@ class ProdutoController extends Controller
 
     public function store(StoreUpdateProduto $request)
     {
-        $this->produtoService->createNewProduto($request->validated());
-      
-        return redirect()->route('produto.index')->with('success', 'Produto cadastrado com sucesso!');
+       return $this->produtoService->createNewProduto($request->validated());
     }
 
     public function show($id)

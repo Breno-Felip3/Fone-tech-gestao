@@ -20,7 +20,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::prefix('/produtos')->group(function(){
     Route::get('/index', [ProdutoController::class, 'index'])->name('produto.index');
     Route::get('/show', [ProdutoController::class, 'showAllProdutos']);
-    Route::post('/salvar', [ProdutoController::class, 'store'])->name('produto.store');
+    Route::post('/salvar', [ProdutoController::class, 'store']);
     Route::get('/show/{id}', [ProdutoController::class, 'show']);
     Route::put('/atualizar/{id}', [ProdutoController::class, 'update'])->name('produto.update');
     Route::delete('/deletar/{id}', [ProdutoController::class, 'destroy'])->name('produto.delete');

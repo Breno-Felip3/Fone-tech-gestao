@@ -12,24 +12,11 @@
     <button class="btn btn-success" data-toggle="modal" id="btnCadastrar" data-target="#cadastrar">Cadastrar</button>
 
     <div id="mensagemConfirmaExclusao" class="alert alert-success" style="margin-top: 10px; display: none;"> Produto excluído com sucesso! </div>
-
-    @if(session('success'))
-        <div style="margin-top: 10px;"> 
-            <div class="alert alert-success" id="success-message">
-                {{ session('success') }}
-            </div>
-
-            <script>
-                setTimeout(function() {
-                    $('#success-message').fadeOut('fast');
-                }, 2000); // 2000 milissegundos = 2 segundos
-            </script>
-        </div>
-    @endif
+    <div id="mensagemConfirmaCadastro" class="alert alert-success" style="margin-top: 10px; display: none;"> Produto cadastrado com sucesso! </div>
   
 </div>
 
- {{-- Setup data for datatables  --}}
+ {{-- Datatables  --}}
 @php
 
     $heads = [
@@ -97,7 +84,7 @@
 @stop
 
 @section('css')
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+ 
 @stop
 
 @section('js')
@@ -106,21 +93,17 @@
         $(document).ready(function () {
 
             var dataTable = $('#produtos').DataTable();
-            // Captura o clique nos botões dentro da coluna de ações
-
-
+           
             // Captura o clique nos botões dentro da coluna de ações
             $('#produtos').on('click', '.btn-column button', function () {
                 // Encontra a linha (row) correspondente ao botão clicado
                 var row = dataTable.row($(this).parents('tr'));
-
                 // Obtém os dados da linha
                 var rowData = row.data();
-
                 // Extrai o ID do objeto de dados
                 var produto_id = rowData.id;
 
-                // Verifica se a classe 'edit' está presente no botão clicado
+                // aciona as ações desejadas
                 if ($(this).hasClass('editar')) {
                     // Código para editar
                     abrirModalEdicao(produto_id);
@@ -157,7 +140,9 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        location.reload();
+                        // Recarrega o DataTable após o sucesso
+                        var dataTable = $('#produtos').DataTable();
+                        dataTable.ajax.reload();
                         $('#mensagemConfirmaExclusao').fadeIn().delay(1000).fadeOut();
                         $('#confirmacaoModal').modal('hide');
                     },
@@ -176,10 +161,11 @@
                     success: function (data) {
                         $(' #nome').val(data.nome);
 
-                        var preco_venda = data.preco_venda.toFixed(2).replace('.', ',');
-                        var preco_custo = data.preco_custo.toFixed(2).replace('.', ',');
+                        var preco_custo = data.preco_custo.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                        var preco_venda = data.preco_venda.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
-                        $(' #preco_custo').val(preco_venda).attr('readonly', true);
+                      
+                        $(' #preco_custo').val(preco_custo).attr('readonly', true);
                         $(' #preco_venda').val(preco_venda).attr('readonly', true);
                         $(' #tempo_garantia').val(data.tempo_garantia);
                         $(' #descricao').val(data.descricao);

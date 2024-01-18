@@ -68,8 +68,8 @@ class ProdutoRepository
     public function create(array $dados)
     {
         // Formatar o valor substituindo vírgulas por pontos
-        $dados['preco_custo'] = str_replace(',', '.', $dados['preco_custo']);
-        $dados['preco_venda'] = str_replace(',', '.', $dados['preco_venda']);
+        $dados['preco_custo']  = str_replace(",",".", $dados['preco_custo']);
+        $dados['preco_venda']  = str_replace(",",".", $dados['preco_venda']);
         
         return $this->entidade->create($dados);
     }
@@ -82,6 +82,10 @@ class ProdutoRepository
     public function update($dados, $id)
     {
         $produto = $this->show($id);
+
+        $dados['preco_custo'] = str_replace(',','.',str_replace('.','',$dados['preco_custo']));
+        $dados['preco_venda'] = str_replace(',','.',str_replace('.','',$dados['preco_venda']));
+     
         
         return $produto->update($dados);
     }
