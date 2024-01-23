@@ -18,6 +18,7 @@ return new class extends Migration
             $table->double('preco_venda');
             $table->integer('tempo_garantia')->nullable();
             $table->text('descricao')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

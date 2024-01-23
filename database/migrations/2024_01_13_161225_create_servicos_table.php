@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nome', 60);
             $table->double('valor_servico');
             $table->integer('tempo_garantia')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

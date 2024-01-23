@@ -7,16 +7,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="FormEditar" action="" method="POST">
-                @method('PUT')
-                @csrf
+            <form id="formularioEditar">
+                
                 <div class="modal-body">                    
                     @include('produto/modal/form')
                 </div>
 
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button id="confirmaEdicao" class="btn btn-primary">Salvar</button>
             </form>            
             </div>
         </div>

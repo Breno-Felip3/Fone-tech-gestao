@@ -21,33 +21,3 @@
     </div>
 </div>
 
-<script src="/js/jquery-3.7.1.min.js"></script>
-<script>
-
-    $(document).ready(function(){
-    $('.salvar').click(function(){
-        var dadosFormulario = $('#formulario').serialize();
-
-        $.ajax({
-            url: "/produtos/salvar",
-            method: 'POST',
-            data: dadosFormulario,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                $('#cadastrar').modal('hide');
-                $('#mensagemConfirmaCadastro').fadeIn().delay(1000).fadeOut();
-
-                // Recarrega o DataTable após o sucesso
-                var dataTable = $('#produtos').DataTable();
-                dataTable.ajax.reload();
-            },
-            error: function(xhr, status, error) {
-                console.error("Erro na requisição Ajax:", xhr, status, error);
-            }
-        });
-    });
-    });
-
-</script>

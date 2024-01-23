@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('estoque_entrada_id')->constrained('estoque_entradas')->onDelete('cascade');
             $table->foreignId('produto_id')->constrained('produtos');
             $table->integer('quantidade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

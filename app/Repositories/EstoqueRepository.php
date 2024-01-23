@@ -1,34 +1,36 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\EstoqueEntrada;
-use App\Models\EstoqueEntradaItem;
-use App\Models\EstoqueSaldo;
-use App\Models\Produto;
+use App\Models\{
+    EstoqueEntrada,
+    EstoqueEntradaItem,
+    EstoqueSaldo,
+    Produto
+};
 
 class EstoqueRepository
 {
-    protected $entidadeEstoqueSaldo, $entidadeEntrada, $entidadeEntradaItens, $entidadeProduto;
+    protected $modelEstoqueSaldo, $modelEstoqueEntrada, $modelEstoqueEntradaItens, $modelProduto;
 
     public function __construct(
-            EstoqueSaldo $entidadeEstoqueSaldo, 
-            EstoqueEntrada $entidadeEntrada, 
-            EstoqueEntradaItem $estoqueEntradaItem,
+            EstoqueSaldo $modelEstoqueSaldo, 
+            EstoqueEntrada $modelEstoqueEntrada, 
+            EstoqueEntradaItem $modelEstoqueEntradaItens,
             Produto $produto
         )
     {
-        $this->entidadeEstoqueSaldo = $entidadeEstoqueSaldo;
-        $this->entidadeEntrada = $entidadeEntrada;
-        $this->entidadeEntradaItens = $estoqueEntradaItem;
-        $this->entidadeProduto = $produto;
+        $this->modelEstoqueSaldo = $modelEstoqueSaldo;
+        $this->modelEstoqueEntrada = $modelEstoqueEntrada;
+        $this->modelEstoqueEntradaItens = $modelEstoqueEntradaItens;
+        $this->modelProduto = $produto;
     }
 
-    public function getAllEstoques($dadosRequisicao)
+    public function getEstoques($dadosRequisicao)
     {
         $dadosRequisicao = $dadosRequisicao;
 
-        $estoques = $this->entidadeEntrada->select('id', 'total_entrada', 'observacao', 'created_at')
-            ->with(['itens' => function ($query) {
+        $estoques = $this->modelEstoqueEntrada->whereNull('deleted_at')->select('id', 'total_entrada', 'observacao', 'created_at')
+            ->whereNull('deleted_at')->with(['itens' => function ($query) {
                     $query->select('estoque_entrada_id', 'produto_id', 'quantidade');
                     }])->withCount('itens as quantidade_produtos');        
         
@@ -73,7 +75,7 @@ class EstoqueRepository
         foreach ($dados['quantidade'] as $produto_id => $quantidade){
 
             if($quantidade > 0){
-                $item = $this->entidadeProduto::find($produto_id); 
+                $item = $this->modelProduto::find($produto_id); 
                 $valorUnitario = $item->preco_custo;
                 $total_entrada = $quantidade * $valorUnitario;
 
@@ -88,25 +90,25 @@ class EstoqueRepository
 
         $valorTotalEntrada = array_sum(array_column($itens, 'total_entrada'));
 
-        $entrada = $this->entidadeEntrada::create([
+        $entrada = $this->modelEstoqueEntrada::create([
             'observacao' => $dados['observacao'],
             'total_entrada' => $valorTotalEntrada
         ]);
 
         foreach ($itens as $item) {
             $entradaItem = $entrada->itens()->create($item);
-            $saldoEstoque = $this->entidadeEstoqueSaldo::where('produto_id', $item['produto_id'])->first();
+            $saldoEstoque = $this->modelEstoqueSaldo::where('produto_id', $item['produto_id'])->first();
             if(isset($saldoEstoque->quantidade)){
                 $novoSaldoEstoque = $item['quantidade'] + $saldoEstoque->quantidade;
             };
            
             // Atualiza ou cria o registro no EstoqueSaldo
-            $estoqueSaldo = $this->entidadeEstoqueSaldo::updateOrCreate(
+            $estoqueSaldo = $this->modelEstoqueSaldo::updateOrCreate(
                 ['produto_id' => $item['produto_id']],
                 ['quantidade' => isset($novoSaldoEstoque) ? $novoSaldoEstoque : $item['quantidade']]
             );
     
-            // Associa o EstoqueSaldo ao EstoqueEntradaItem
+            // Associa o EstoqueSaldo ao modelEstoqueEntradaItens
             $entradaItem->estoqueSaldo()->save($estoqueSaldo);
         }
         

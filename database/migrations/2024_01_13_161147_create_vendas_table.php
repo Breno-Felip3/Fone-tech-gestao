@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('cliente_id')->constrained('clientes');
             $table->foreignId('condicao_pagamento_id')->constrained('pagamentos');
             $table->double('total_venda');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

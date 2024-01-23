@@ -18,7 +18,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::prefix('/produtos')->group(function(){
-    Route::get('/index', [ProdutoController::class, 'index'])->name('produto.index');
+    Route::any('/index', [ProdutoController::class, 'index'])->name('produto.index');
     Route::get('/show', [ProdutoController::class, 'showAllProdutos']);
     Route::post('/salvar', [ProdutoController::class, 'store']);
     Route::get('/show/{id}', [ProdutoController::class, 'show']);

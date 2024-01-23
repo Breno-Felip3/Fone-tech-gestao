@@ -13,6 +13,7 @@
 
     <div id="mensagemConfirmaExclusao" class="alert alert-success" style="margin-top: 10px; display: none;"> Produto excluído com sucesso! </div>
     <div id="mensagemConfirmaCadastro" class="alert alert-success" style="margin-top: 10px; display: none;"> Produto cadastrado com sucesso! </div>
+    <div id="mensagemConfirmaEdicao" class="alert alert-success" style="margin-top: 10px; display: none;"> Produto atualizado com sucesso! </div>
   
 </div>
 
@@ -30,11 +31,12 @@
     ];
 
     $btnEdit = '<button class="btn btn-xs editar text-primary mx-1 shadow" title="Edit">' .
-                '<i class="fa fa-lg fa-fw fa-pen"></i>' .
+                '<i class="fa fa-fw fa-pen-to-square"></i>' .
                 '</button>';
     $btnDelete = '<button class="btn btn-xs deletar text-danger mx-1 shadow" title="Delete">
-                    <i class="fa fa-lg fa-fw fa-trash"></i>
+                    <i class="fa fa-fw fa-trash-can"></i>
                 </button>';
+
     // $btnDetails = '<button class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
     //                 <i class="fa fa-lg fa-fw fa-eye"></i>
     //             </button>';
@@ -49,7 +51,7 @@
             ['data' => 'preco_custo'],
             ['data' => 'preco_venda'],
             ['data' => 'tempo_garantia', 'orderable' => false],
-            ['data' => 'estoque.quantidade', 
+            ['data' => 'quantidade', 
 
                 'defaultContent' => isset('data'['estoque']['quantidade']) ? 'data'['estoque']['quantidade'] : 0
             ],
@@ -84,15 +86,40 @@
 @stop
 
 @section('css')
- 
+    <link rel="stylesheet" href="{{ asset('/css/bootstrap/ajax_bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/bootstrap/maxcdn.bootstrap.min.css') }}">
 @stop
 
 @section('js')
+    <script src="{{ asset('js/icones/fontawesome.js') }}"></script>
     <script>
 
         $(document).ready(function () {
-
+            //Define o Datatables
             var dataTable = $('#produtos').DataTable();
+
+            //Cria um novo produto
+            $('.salvar').click(function(){
+                var dadosFormulario = $('#formulario').serialize();
+                $.ajax({
+                    url: "/produtos/salvar",
+                    method: 'POST',
+                    data: dadosFormulario,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        $('#cadastrar').modal('hide');
+                        $('#mensagemConfirmaCadastro').fadeIn().delay(1000).fadeOut();
+
+                        // Recarrega o DataTable após o sucesso
+                        dataTable.ajax.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Erro na requisição Ajax:", xhr, status, error);
+                    }
+                });
+            });
            
             // Captura o clique nos botões dentro da coluna de ações
             $('#produtos').on('click', '.btn-column button', function () {
@@ -109,11 +136,11 @@
                     abrirModalEdicao(produto_id);
                 } else if ($(this).hasClass('deletar')){
                     // Ação desconhecida ou nenhum botão identificado
-                    abrirModalConfirmacao(produto_id);
+                    modalConfirmacaoExclusao(produto_id);
                 }
             });
 
-            // Limpar campos ao clicar no botão Cadastrar
+            // Limpa os campos ao clicar no botão Cadastrar
             $('#btnCadastrar').click(function() {
                 // Limpar os campos
                 $('#nome').val('');
@@ -125,33 +152,34 @@
                 $('#descricao').val('');
             });
 
-            function abrirModalConfirmacao(produto_id)
+            //Configura a exclusão do produto
+            function modalConfirmacaoExclusao(produto_id)
             {
+                //Abre o modal para exclusão
                 $('#confirmacaoModal').modal('show');
-                $('#confirmarExclusao').data('id', produto_id);
+
+                //Confirma a exlusão do produto
+                $('#confirmaExclusao').click(function() {
+                    $.ajax({
+                        url: "/produtos/deletar/" + produto_id,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+
+                            // Recarrega o DataTable após o sucesso
+                            dataTable.ajax.reload();
+                            $('#mensagemConfirmaExclusao').fadeIn().delay(1000).fadeOut();
+                            $('#confirmacaoModal').modal('hide');
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Ocorreu um erro ao excluir o produto: ' + error);
+                        }
+                    });
+                });
             }
 
-            $('#confirmarExclusao').click(function() {
-                var id = $(this).data('id');
-                $.ajax({
-                    url: "/produtos/deletar/" + id,
-                    type: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        // Recarrega o DataTable após o sucesso
-                        var dataTable = $('#produtos').DataTable();
-                        dataTable.ajax.reload();
-                        $('#mensagemConfirmaExclusao').fadeIn().delay(1000).fadeOut();
-                        $('#confirmacaoModal').modal('hide');
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Ocorreu um erro ao excluir o produto: ' + error);
-                    }
-                });
-            });
-        
             //Edição do Produto
             function abrirModalEdicao(produto_id) {
                 $.ajax({
@@ -159,20 +187,40 @@
                     method: 'GET',
                     dataType: 'json',
                     success: function (data) {
+                        //Atribui os dados aos campos do formulário 
                         $(' #nome').val(data.nome);
-
                         var preco_custo = data.preco_custo.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                         var preco_venda = data.preco_venda.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-
-                      
                         $(' #preco_custo').val(preco_custo).attr('readonly', true);
                         $(' #preco_venda').val(preco_venda).attr('readonly', true);
                         $(' #tempo_garantia').val(data.tempo_garantia);
                         $(' #descricao').val(data.descricao);
-                    
-                        // Defina a ação do formulário dinamicamente
-                        $('#FormEditar').attr('action', '/produtos/atualizar/' + produto_id);
+
+                        //Abre o formulário
                         $('#editar').modal('show');
+
+                        $('#formularioEditar').off('submit').on('submit', function (event) {
+                            event.preventDefault(); 
+                            var dadosFormulario = $(this).serialize();
+                            $.ajax({
+                                url: "/produtos/atualizar/" + produto_id,
+                                data: dadosFormulario,
+                                type: 'PUT',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function(response) {
+                                    $('#editar').modal('hide');
+
+                                    // Recarrega o DataTable após o sucesso
+                                    dataTable.ajax.reload();
+                                    $('#mensagemConfirmaEdicao').fadeIn().delay(1300).fadeOut();
+                                },
+                                error: function(xhr, status, error) {
+                                    alert('Ocorreu um erro ao atualizar o produto: ' + error);
+                                }
+                            });
+                        });
                     },
                     
                     error: function (xhr, status, error) {
@@ -180,6 +228,7 @@
                     }
                 });
             };
+
         });
     </script>
 @stop

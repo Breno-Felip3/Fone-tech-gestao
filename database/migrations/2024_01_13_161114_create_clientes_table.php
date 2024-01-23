@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nome_rua', 100)->nullable();
             $table->string('bairro', 50)->nullable();
             $table->string('cidade', 50)->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

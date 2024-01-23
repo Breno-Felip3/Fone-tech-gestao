@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->double('total_entrada');
             $table->text('observacao')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

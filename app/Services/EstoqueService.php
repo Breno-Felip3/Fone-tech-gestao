@@ -15,7 +15,7 @@ class EstoqueService
     public function getEstoques($dadosRequisicao)
     {
         $dadosRequisicao = $dadosRequisicao;
-        return $this->repositorio->getAllEstoques($dadosRequisicao);
+        return $this->repositorio->getEstoques($dadosRequisicao);
     }
 
     public function createNewEstoque($dados)

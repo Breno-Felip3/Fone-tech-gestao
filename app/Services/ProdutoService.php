@@ -15,7 +15,7 @@ class ProdutoService
     public function getProdutos( $dadosRequisicao)
     {
         $dadosRequisicao =  $dadosRequisicao;
-        return $this->repositorio->getAllProdutos( $dadosRequisicao);
+        return $this->repositorio->getProdutos( $dadosRequisicao);
     }
 
     public function createNewProduto(array $dados)
@@ -25,7 +25,7 @@ class ProdutoService
 
     public function showProduto($id)
     {
-        return $this->repositorio->show($id);
+        return $this->repositorio->getProduto($id);
     }
 
     public function updateProduto($dados, $id)
